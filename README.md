@@ -1,6 +1,6 @@
 # 🧠 ECoG-Based_Regression_for_Multi-Finger_Flexion_Decoding
 
-> **Description**: A deep learning pipeline that decodes individual finger movements from electrocorticography (ECoG) signals recorded from the surface of the brain. The system employs a 1D convolutional autoencoder with U-Net-style skip connections, wavelet-initialized filters, a bidirectional LSTM temporal module, and dilated convolutions to map continuous wavelet transform spectrograms to finger flexion trajectories — achieving an average Pearson correlation of 0.5455 across three subjects and surpassing both competition checkpoints (r ≥ 0.33 and r ≥ 0.45).
+> **Description**: I worked to develop a deep learning pipeline that decodes individual finger movements from electrocorticography (ECoG) signals recorded from the surface of the brain. Our system employs a 1D convolutional autoencoder with U-Net-style skip connections, wavelet-initialized filters, a bidirectional LSTM temporal module, and dilated convolutions to map continuous wavelet transform spectrograms to finger flexion trajectories — achieving an average Pearson correlation of 0.5455 across three subjects and surpassing both competition checkpoints (r ≥ 0.33 and r ≥ 0.45).
 
 [![Course](https://img.shields.io/badge/BE%20521-Brain%20Computer%20Interfaces-darkblue?style=for-the-badge)](https://github.com)
 [![Result](https://img.shields.io/badge/Avg%20Correlation-0.5455-gold?style=for-the-badge)](https://github.com)
@@ -55,7 +55,7 @@ Raw ECoG → Bandpass Filter → CWT Spectrograms → 1D Conv Autoencoder + BiLS
 
 ## 🎯 Overview
 
-This project tackles the 4th Brain-Computer Interface Data Competition: predicting continuous finger flexion trajectories from ECoG recordings captured on the cortical surface of three epileptic patients. Each patient wore a subdural electrode grid (48–64 channels, sampled at 1000 Hz) while responding to visual cues to flex individual fingers. A data glove simultaneously recorded the resulting flexion of five fingers.
+Our project tackles the 4th Brain-Computer Interface Data Competition: predicting continuous finger flexion trajectories from ECoG recordings captured on the cortical surface of three epileptic patients. Each patient wore a subdural electrode grid (48–64 channels, sampled at 1000 Hz) while responding to visual cues to flex individual fingers. A data glove simultaneously recorded the resulting flexion of five fingers.
 
 The core challenge is mapping high-dimensional, noisy neural signals — which carry motor intention before movement actually occurs — to smooth, continuous flexion waveforms. A characteristic neurophysiological delay separates brain activity from physical movement; our pipeline explicitly compensates for this. The final model is an end-to-end 1D convolutional autoencoder augmented with wavelet-based weight initialisation, increasing dilation rates for long-range temporal context, and a bidirectional LSTM layer for sequence-level refinement. It is trained independently per patient to handle the varying electrode counts and individual neural signatures.
 
@@ -437,7 +437,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
 <div align="center">
 
 <p float="left">
-<img src="Images/val_1.png" alt="Main Robot Image" width="45%" />
+<img src="Images/val_1.png" alt="Main Robot Image" width="42%" />
   <img src="Images/val_2.png" alt="Robot in battle Arena" width="45%" />
 </p>
 
@@ -447,7 +447,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
 <div align="center">
 
 <p float="left">
-<img src="Images/val_t_1.png" alt="Main Robot Image" width="30%" />
+<img src="Images/val_t_1.png" alt="Main Robot Image" width="31%" />
   <img src="Images/val_t_2.png" alt="Robot in battle Arena" width="32%" />
    <img src="Images/val_t_3.png" alt="Robot in battle Arena" width="32%" />
 </p>
@@ -494,7 +494,7 @@ conv.weight[2:] → Xavier  # remaining filters
 
 ### 3. Pearson Correlation Metric
 
-The competition ranks submissions by average Pearson r across 4 fingers × 3 patients. The metric is computed both as a PyTorch differentiable quantity (for logging) and as a NumPy post-hoc quantity (for per-finger evaluation):
+Our competition ranked submissions by average Pearson r across 4 fingers × 3 patients. The metric is computed both as a PyTorch differentiable quantity (for logging) and as a NumPy post-hoc quantity (for per-finger evaluation):
 
 ```python
 # Differentiable (PyTorch) — used for logging
@@ -524,13 +524,6 @@ Inspired by Kubanek et al. (2009), an initial pipeline extracted 6 features per 
 
 On the same feature set, SVM Regressor and Random Forest achieved r ≈ 0.35, slightly above the linear baseline. LightGBM performed poorly, with correlations as low as −0.033 for Patient 2 / Finger 5, indicating overfitting to training-set noise. Ridge Regression and XGBoost offered no meaningful improvement over the linear decoder.
 
-### Early CNN Iterations
-
-Shifting to convolutional networks with normalised spectrograms and robustly scaled inputs failed to surpass Checkpoint 2. Root causes identified in retrospect: inadequate temporal modelling (no dilation, no LSTM), insufficient hyperparameter tuning, and a lack of skip connections causing information loss through the bottleneck.
-
-### Aggressive Notch Filtering
-
-Applying notch filters at 60 Hz (power line) and harmonics actually **reduced** correlation. Likely causes: removal of informative content near the upper edge of low-gamma and lower edge of high-gamma bands, plus phase distortion introduced by IIR filter cascades that complicated the subsequent wavelet decomposition.
 
 ### Narrow Bandpass (40–300 Hz)
 
@@ -568,13 +561,6 @@ Additionally, the **lumbricals** and **interossei** — intrinsic hand muscles t
    - Placed after the decoder (not replacing it), the BiLSTM smoothed predictions and captured global sequence dependencies the conv layers missed.
    - Bidirectionality was critical — future context (e.g., the end of a flexion event) improves prediction of the current timestep.
 
-5. **Per-Patient Independent Models**
-   - Each patient has a different number of electrodes, different electrode placement, and different neural signatures.
-   - Training separate models avoided the need for domain adaptation and let each model fully specialise.
-
-6. **ReduceLROnPlateau Scheduler**
-   - Adaptive learning rate decay prevented the model from overshooting during later epochs when fine-grained weight updates were needed.
-
 ### ⚠️ Challenges Encountered
 
 1. **Train–Test Correlation Gap**
@@ -585,39 +571,23 @@ Additionally, the **lumbricals** and **interossei** — intrinsic hand muscles t
    - Removing 60 Hz interference also removed predictive spectral content near gamma-band boundaries.
    - **Lesson:** Blind application of standard EEG preprocessing heuristics can be counterproductive for ECoG. Validate every filter stage empirically.
 
-3. **Patient 1 Finger 5 — Negative Test Correlation**
-   - The little finger for Patient 1 achieved r = −0.403 on the test set despite positive validation performance.
-   - **Lesson:** Some finger–patient combinations have very sparse training signal. Augmentation or ensemble approaches may be needed for the hardest sub-tasks.
-
-4. **Delay Tuning is Critical**
+3. **Delay Tuning is Critical**
    - The neurophysiological delay varies across patients and was found empirically (137 ms in the report, 187 ms in the final submission code).
    - **Lesson:** Treat the delay as a hyperparameter and sweep it during validation, rather than using a single literature value.
 
-5. **Bandpass Bounds Interact with Decimation**
-   - Passing frequencies above half the post-decimation Nyquist (500 Hz → keep below 50 Hz after 10× decimation) risks aliasing.
-   - **Lesson:** Co-design the filter and the downsampling factor; never set them independently.
 
 ---
 
 ## 🔮 Future Improvements
 
-1. **Delay Sweep**
-   ```python
-   # Cross-validate over delay values
-   for delay_ms in np.arange(100, 250, 10):
-       delay_samples = int(delay_ms / 1000 * DOWNSAMPLE_FS)
-       # shift, train, evaluate on val set
-       # keep the delay that maximises mean val correlation
-   ```
-
-2. **Larger Sliding Window Stride for Validation**
+1. **Larger Sliding Window Stride for Validation**
    ```python
    # Use stride = 256 (non-overlapping) for val/test datasets
    # to get an unbiased estimate of generalisation
    self.stride = 1 if self.train else self.sample_len
    ```
 
-3. **Gaussian Smoothing of Predictions**
+2. **Gaussian Smoothing of Predictions**
    ```python
    # Post-hoc smoothing reduces high-frequency prediction noise
    from scipy.ndimage import gaussian_filter1d
@@ -643,7 +613,7 @@ Additionally, the **lumbricals** and **interossei** — intrinsic hand muscles t
 
 ## 🙏 Acknowledgments
 
-- **BE 521 Teaching Staff (Kevin Xie, Zhongchuan Xu)** — for the competition infrastructure, leaderboard platform, and guided project structure
+- **BE 521 Teaching Staff ** — for the competition infrastructure, leaderboard platform, and guided project structure
 - **University of Pennsylvania** — for computational resources and course support
 - **Team Members** — for collaborative algorithm development, debugging sessions, and late-night tuning marathons
 - **Harborview Hospital / BCI Competition Organizers** — for the de-identified ECoG dataset and competition framework
