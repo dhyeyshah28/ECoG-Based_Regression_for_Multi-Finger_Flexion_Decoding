@@ -19,7 +19,7 @@ Raw ECoG → Bandpass Filter → CWT Spectrograms → 1D Conv Autoencoder + BiLS
 <div align="center">
 
 <p float="left">
-<img src="Images/proj_main.png" alt="Main Robot Image" width="35%" />
+<img src="Images/proj_main.png" alt="Main Robot Image" width="38%" />
   <img src="Images/corr.png" alt="Robot in battle Arena" width="50%" />
 </p>
 
