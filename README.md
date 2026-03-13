@@ -19,7 +19,7 @@ Raw ECoG → Bandpass Filter → CWT Spectrograms → 1D Conv Autoencoder + BiLS
 <div align="center">
 
 <p float="left">
-<img src="Images/proj_main.png" alt="Main Robot Image" width="45%" />
+<img src="Images/proj_main.png" alt="Main Robot Image" width="35%" />
   <img src="Images/corr.png" alt="Robot in battle Arena" width="50%" />
 </p>
 
@@ -438,7 +438,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
 
 <p float="left">
 <img src="Images/val_1.png" alt="Main Robot Image" width="45%" />
-  <img src="Images/val_2.png" alt="Robot in battle Arena" width="50%" />
+  <img src="Images/val_2.png" alt="Robot in battle Arena" width="45%" />
 </p>
 
 </div>
@@ -447,7 +447,7 @@ scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
 <div align="center">
 
 <p float="left">
-<img src="Images/val_t_1.png" alt="Main Robot Image" width="33%" />
+<img src="Images/val_t_1.png" alt="Main Robot Image" width="30%" />
   <img src="Images/val_t_2.png" alt="Robot in battle Arena" width="33%" />
    <img src="Images/val_t_3.png" alt="Robot in battle Arena" width="33%" />
 </p>
