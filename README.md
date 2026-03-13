@@ -16,6 +16,15 @@ Raw ECoG → Bandpass Filter → CWT Spectrograms → 1D Conv Autoencoder + BiLS
 
 </div>
 
+<div align="center">
+
+<p float="left">
+<img src="Images/proj_main.png" alt="Main Robot Image" width="45%" />
+  <img src="Images/corr.png" alt="Robot in battle Arena" width="50%" />
+</p>
+
+</div>
+
 ---
 
 ## 📋 Table of Contents
@@ -177,6 +186,14 @@ The core challenge is mapping high-dimensional, noisy neural signals — which c
 ---
 
 ## 🔬 Technical Approach
+
+<div align="center">
+
+<p float="left">
+<img src="Images/network_arch.png" alt="Main Robot Image" width="45%" />
+</p>
+
+</div>
 
 ### 1. Signal Preprocessing
 
@@ -415,6 +432,27 @@ scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.5, patience=2)
 | **Avg** | **0.753**       | **0.483**     | **0.5455**     |
 
 > The competition metric (r = 0.5455) is the arithmetic mean of the 12 evaluation correlations: 4 fingers × 3 patients, excluding the ring finger.
+
+
+<div align="center">
+
+<p float="left">
+<img src="Images/val_1.png" alt="Main Robot Image" width="45%" />
+  <img src="Images/val_2.png" alt="Robot in battle Arena" width="50%" />
+</p>
+
+</div>
+
+
+<div align="center">
+
+<p float="left">
+<img src="Images/val_t_1.png" alt="Main Robot Image" width="33%" />
+  <img src="Images/val_t_2.png" alt="Robot in battle Arena" width="33%" />
+   <img src="Images/val_t_3.png" alt="Robot in battle Arena" width="33%" />
+</p>
+
+</div>
 
 ---
 
